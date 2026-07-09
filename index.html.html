@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedro LxG — Canal de Games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0C10;
+    --surface:#12151C;
+    --surface-2:#181C25;
+    --line:#232833;
+    --text:#F3F5F8;
+    --muted:#8B93A3;
+    --cyan:#29FFC6;
+    --fifa-blue:#1E5FC4;
+    --fifa-garnet:#A6192E;
+    --nfs-amber:#FF5A1F;
+    --nfs-yellow:#FFD23F;
+    --ff-violet:#8B5CF6;
+    --ff-cyan:#3EE8D6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Manrope', sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Rajdhani', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+  }
+  .mono{font-family:'JetBrains Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+
+  /* background texture */
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size:48px 48px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 80%);
+  }
+
+  /* NAV */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 6vw;
+    background:rgba(10,12,16,0.75);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{
+    font-size:22px; font-weight:700; letter-spacing:0.04em;
+  }
+  .logo span{color:var(--cyan);}
+  .nav-links{display:flex; align-items:center; gap:32px;}
+  .nav-links a{
+    font-size:14px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--muted); transition:color .2s;
+  }
+  .nav-links a:hover{color:var(--text);}
+  .nav-cta{
+    background:var(--cyan); color:#06110F !important;
+    padding:10px 20px; border-radius:4px;
+    font-weight:700 !important; font-size:13px !important;
+  }
+  @media (max-width:720px){ .nav-links a:not(.nav-cta){display:none;} }
+
+  /* HERO */
+  .hero{
+    position:relative; min-height:100vh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:0 6vw;
+    isolation:isolate;
+  }
+  .hero::before{
+    content:""; position:absolute; z-index:-1;
+    top:-20%; right:-10%; width:60vw; height:60vw; max-width:800px; max-height:800px;
+    background:radial-gradient(circle, rgba(41,255,198,0.10) 0%, transparent 70%);
+  }
+  .live-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    width:fit-content;
+    padding:7px 14px; margin-bottom:28px;
+    border:1px solid rgba(41,255,198,0.35);
+    border-radius:999px;
+    background:rgba(41,255,198,0.06);
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.08em;
+    color:var(--cyan);
+  }
+  .live-dot{
+    width:7px; height:7px; border-radius:50%; background:var(--cyan);
+    box-shadow:0 0 8px var(--cyan);
+    animation:pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+  .hero h1{
+    font-size:clamp(52px, 10vw, 128px);
+    line-height:0.92;
+    font-weight:700;
+  }
+  .hero h1 .accent{
+    background:linear-gradient(90deg, var(--cyan), #7CFFE0);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero-sub{
+    max-width:560px; margin-top:24px;
+    font-size:18px; line-height:1.6; color:var(--muted);
+  }
+  .hero-actions{ display:flex; gap:16px; margin-top:40px; flex-wrap:wrap; }
+  .btn-primary{
+    background:var(--text); color:#0A0C10;
+    padding:15px 30px; border-radius:4px;
+    font-weight:700; font-size:14px; text-transform:uppercase; letter-spacing:0.06em;
+    transition:transform .15s ease;
+    display:inline-block;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); }
+  .btn-ghost{
+    border:1px solid var(--line); color:var(--text);
+    padding:15px 30px; border-radius:4px;
+    font-weight:700; font-size:14px; text-transform:uppercase; letter-spacing:0.06em;
+    transition:border-color .15s ease;
+  }
+  .btn-ghost:hover{ border-color:var(--cyan); }
+
+  .scroll-cue{
+    position:absolute; bottom:40px; left:6vw;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted);
+    letter-spacing:0.15em; writing-mode:vertical-rl;
+  }
+
+  /* SECTION SHELL */
+  section{ position:relative; z-index:1; padding:120px 6vw; }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.15em;
+    color:var(--cyan); text-transform:uppercase; margin-bottom:14px; display:block;
+  }
+  .section-title{ font-size:clamp(32px,5vw,52px); font-weight:700; max-width:700px; }
+  .section-lede{ color:var(--muted); font-size:17px; max-width:600px; margin-top:18px; line-height:1.7; }
+
+  /* ABOUT */
+  .about-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start; }
+  @media (max-width:860px){ .about-wrap{ grid-template-columns:1fr; } }
+  .stat-row{ display:flex; gap:40px; margin-top:44px; flex-wrap:wrap; }
+  .stat-num{ font-family:'JetBrains Mono',monospace; font-size:34px; font-weight:700; color:var(--cyan); }
+  .stat-label{ font-size:13px; color:var(--muted); margin-top:4px; text-transform:uppercase; letter-spacing:0.06em; }
+
+  /* GAMES */
+  .game-card{
+    border:1px solid var(--line); border-radius:12px;
+    background:var(--surface);
+    padding:40px; margin-bottom:28px;
+    display:grid; grid-template-columns:1fr 340px; gap:40px; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  @media (max-width:860px){ .game-card{ grid-template-columns:1fr; } }
+  .game-tag{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:0.12em;
+    text-transform:uppercase; padding:5px 12px; border-radius:999px;
+    display:inline-block; margin-bottom:18px; border:1px solid currentColor;
+  }
+  .game-card h3{ font-size:38px; font-weight:700; margin-bottom:14px; }
+  .game-desc{ color:var(--muted); font-size:15.5px; line-height:1.7; max-width:480px; }
+  .game-desc b{ color:var(--text); font-weight:700; }
+
+  /* FIFA scoreboard */
+  .fifa-panel{
+    background:linear-gradient(160deg, rgba(30,95,196,0.14), rgba(166,25,46,0.10));
+    border:1px solid rgba(30,95,196,0.35); border-radius:10px;
+    padding:24px;
+  }
+  .fifa-score{ display:flex; align-items:center; justify-content:space-between; }
+  .fifa-club{ text-align:center; }
+  .fifa-crest{
+    width:52px; height:52px; margin:0 auto 8px;
+    border-radius:50%; border:2px solid var(--fifa-blue);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Rajdhani',sans-serif; font-weight:700; font-size:18px; color:var(--fifa-blue);
+    background:rgba(30,95,196,0.08);
+  }
+  .fifa-club .name{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.06em; }
+  .fifa-vs{ font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700; color:var(--text); }
+  .fifa-comp-list{ margin-top:22px; display:flex; flex-direction:column; gap:10px; }
+  .fifa-comp{ display:flex; justify-content:space-between; font-size:13px; padding:8px 0; border-top:1px solid var(--line); }
+  .fifa-comp .status{ font-family:'JetBrains Mono',monospace; color:var(--fifa-blue); font-size:11px; text-transform:uppercase; }
+
+  /* NFS speedometer */
+  .nfs-panel{
+    background:radial-gradient(circle at 50% 30%, rgba(255,90,31,0.14), transparent 70%);
+    border:1px solid rgba(255,90,31,0.35); border-radius:10px;
+    padding:24px; text-align:center;
+  }
+  .gauge-wrap{ position:relative; width:220px; height:130px; margin:0 auto; }
+  .gauge-label{ margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--nfs-amber); letter-spacing:0.1em; text-transform:uppercase; }
+  .nfs-stats{ display:flex; justify-content:space-around; margin-top:20px; }
+  .nfs-stat .num{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:20px; color:var(--nfs-yellow); }
+  .nfs-stat .lbl{ font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; }
+
+  /* Free Fire rank badge */
+  .ff-panel{
+    background:linear-gradient(160deg, rgba(139,92,246,0.14), rgba(62,232,214,0.08));
+    border:1px solid rgba(139,92,246,0.35); border-radius:10px;
+    padding:28px; text-align:center;
+  }
+  .ff-diamond{
+    width:74px; height:74px; margin:0 auto 14px;
+    background:linear-gradient(135deg, var(--ff-cyan), var(--ff-violet));
+    clip-path:polygon(50% 0%, 100% 35%, 82% 100%, 18% 100%, 0% 35%);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:13px; color:#06110F;
+  }
+  .ff-rank{ font-family:'Rajdhani',sans-serif; font-weight:700; font-size:22px; letter-spacing:0.03em; }
+  .ff-rank span{ color:var(--ff-cyan); }
+  .ff-modes{ display:flex; gap:10px; justify-content:center; margin-top:18px; flex-wrap:wrap; }
+  .ff-mode{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.06em;
+    border:1px solid rgba(62,232,214,0.4); color:var(--ff-cyan);
+    padding:6px 12px; border-radius:999px; text-transform:uppercase;
+  }
+
+  /* FOOTER */
+  footer{
+    border-top:1px solid var(--line); padding:60px 6vw 40px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;
+  }
+  .footer-note{ color:var(--muted); font-size:13px; }
+  .footer-links{ display:flex; gap:24px; }
+  .footer-links a{ font-size:13px; color:var(--muted); transition:color .2s; }
+  .footer-links a:hover{ color:var(--cyan); }
+
+  @media (prefers-reduced-motion: reduce){
+    .live-dot{ animation:none; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="logo">PEDRO <span>LxG</span></div>
+  <div class="nav-links">
+    <a href="#sobre">Sobre</a>
+    <a href="#jogos">Jogos</a>
+    <a href="#" class="nav-cta">Assistir no YouTube</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="live-badge"><span class="live-dot"></span> LIVE TODOS OS DIAS</div>
+  <h1>JOGO DE<br>TUDO, TODO<br><span class="accent">DIA.</span></h1>
+  <p class="hero-sub">Canal de games diversificados. FIFA de manhã, corrida à tarde, Free Fire à noite — sempre no descontraído, sempre em live. Bora junto?</p>
+  <div class="hero-actions">
+    <a href="#" class="btn-primary">Assistir agora →</a>
+    <a href="#jogos" class="btn-ghost">Ver os jogos</a>
+  </div>
+  <div class="scroll-cue">SCROLL ↓</div>
+</section>
+
+<section id="sobre">
+  <div class="about-wrap">
+    <div>
+      <span class="eyebrow">O canal</span>
+      <h2 class="section-title">Variado por natureza, descontraído por escolha</h2>
+      <p class="section-lede">Sou o Pedro, e aqui não tem jogo fixo nem estratégia de nicho — jogo o que bate vontade no dia. O fio condutor é o clima: partida séria, papo solto, sem viagem de tryhard. Toda live é uma mistura diferente.</p>
+      <div class="stat-row">
+        <div><div class="stat-num">7/7</div><div class="stat-label">Dias com live</div></div>
+        <div><div class="stat-num">3+</div><div class="stat-label">Jogos na rotação</div></div>
+        <div><div class="stat-num">100%</div><div class="stat-label">Descontraído</div></div>
+      </div>
+    </div>
+    <div>
+      <span class="eyebrow">Como funciona</span>
+      <h2 class="section-title" style="font-size:24px;">Uma live, três estilos de jogo</h2>
+      <p class="section-lede">Cada jogo abaixo tem seu próprio jeito de jogar — dá uma olhada na seção de baixo pra entender como eu sou dentro de cada um.</p>
+    </div>
+  </div>
+</section>
+
+<section id="jogos">
+  <span class="eyebrow">Os jogos</span>
+  <h2 class="section-title" style="margin-bottom:60px;">Onde eu jogo de verdade</h2>
+
+  <!-- FIFA -->
+  <div class="game-card">
+    <div>
+      <div class="game-tag" style="color:var(--fifa-blue);">Simulação · Futebol</div>
+      <h3>FIFA</h3>
+      <p class="game-desc">Atualmente no comando do <b>Barcelona</b>, buscando o caneco da Champions League e seguindo vivo em <b>todos os campeonatos</b> da temporada. Jogo focado, mas sem perder a piada — cada gol vira motivo de comemoração exagerada na live.</p>
+    </div>
+    <div class="fifa-panel">
+      <div class="fifa-score">
+        <div class="fifa-club">
+          <div class="fifa-crest">FCB</div>
+          <div class="name">Barcelona</div>
+        </div>
+        <div class="fifa-vs">VS</div>
+        <div class="fifa-club">
+          <div class="fifa-crest" style="border-color:var(--fifa-garnet); color:var(--fifa-garnet);">?</div>
+          <div class="name">Próximo rival</div>
+        </div>
+      </div>
+      <div class="fifa-comp-list">
+        <div class="fifa-comp"><span>Champions League</span><span class="status">Disputando</span></div>
+        <div class="fifa-comp"><span>Liga nacional</span><span class="status">Em andamento</span></div>
+        <div class="fifa-comp"><span>Copas locais</span><span class="status">Classificado</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NFS -->
+  <div class="game-card">
+    <div>
+      <div class="game-tag" style="color:var(--nfs-amber);">Corrida · Adrenalina</div>
+      <h3>Need for Speed</h3>
+      <p class="game-desc">Rodando de <b>G63</b> e enfrentando todas as missões no <b>difícil</b> — sem atalho, sem facilitar. É o jogo da live pra quem gosta de ver corrida de verdade, com direção no talo e uns sustos no caminho.</p>
+    </div>
+    <div class="nfs-panel">
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 220 130" width="220" height="130">
+          <path d="M 20 120 A 90 90 0 0 1 200 120" fill="none" stroke="#232833" stroke-width="14" stroke-linecap="round"/>
+          <path d="M 20 120 A 90 90 0 0 1 165 45" fill="none" stroke="#FF5A1F" stroke-width="14" stroke-linecap="round"/>
+          <line x1="110" y1="120" x2="150" y2="55" stroke="#FFD23F" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="110" cy="120" r="8" fill="#FFD23F"/>
+          <text x="110" y="105" text-anchor="middle" fill="#F3F5F8" font-family="JetBrains Mono" font-size="20" font-weight="700">G63</text>
+        </svg>
+      </div>
+      <div class="gauge-label">Dificuldade: Difícil</div>
+      <div class="nfs-stats">
+        <div class="nfs-stat"><div class="num">100%</div><div class="lbl">Missões no talo</div></div>
+        <div class="nfs-stat"><div class="num">MAX</div><div class="lbl">Adrenalina</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Free Fire -->
+  <div class="game-card">
+    <div>
+      <div class="game-tag" style="color:var(--ff-cyan);">Battle Royale · Ranked</div>
+      <h3>Free Fire</h3>
+      <p class="game-desc">Atualmente <b>Diamante 3</b>, alternando entre <b>CS</b> e <b>partida rankeada</b>. E quando bate a vontade de testar a mira de verdade, tem <b>x1 de sala</b> ao vivo com quem tiver coragem de entrar.</p>
+    </div>
+    <div class="ff-panel">
+      <div class="ff-diamond">D3</div>
+      <div class="ff-rank">Diamante <span>III</span></div>
+      <div class="ff-modes">
+        <div class="ff-mode">CS</div>
+        <div class="ff-mode">Rankeada</div>
+        <div class="ff-mode">X1 de sala</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-note">Pedro LxG — canal de games diversificados. Live todos os dias.</div>
+  <div class="footer-links">
+    <a href="#">YouTube</a>
+    <a href="#">Instagram</a>
+    <a href="#">Twitch</a>
+  </div>
+</footer>
+
+</body>
+</html>
